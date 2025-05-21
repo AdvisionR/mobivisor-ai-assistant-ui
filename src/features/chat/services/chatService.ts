@@ -1,6 +1,7 @@
 import { ChatMessage } from "@/features/chat/types";
+import { apiFetch } from "@/lib/fetcher";
 
-export async function sendChatMessage(messages: ChatMessage[]): Promise<string> {
+export async function sendChatMessage(messages: ChatMessage[]): Promise<Omit<ChatMessage, 'role'>> {
   const lastUserMessage: ChatMessage = messages[messages.length - 1];
 
   const payload = {
@@ -9,23 +10,16 @@ export async function sendChatMessage(messages: ChatMessage[]): Promise<string> 
     collection: "mobivisor",
   };
 
-  console.log("payload", payload);
+  const data = await apiFetch<{ response: string; sources: string[] }>(
+    '/api/v1/document/query',
+    {
+      method: 'POST',
+      json: payload,
+    }
+  );
 
-  const response = await fetch("http://173.249.57.83:8000/api/v1/document/query", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
-
-  console.log({response});
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch response from sendChatMessage method");
+  return {
+    content: data.response || "No response.",
+    sources: data.sources || [],
   }
-
-  const data = await response.json();
-  console.log(data)
-  return data.response || "No response.";
 }

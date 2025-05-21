@@ -12,7 +12,11 @@ export function useChat() {
     setIsLoading(true);
 
     const response = await sendChatMessage([...messages, newMessage]);
-    setMessages((prev) => [...prev, { role: "assistant", content: response }]);
+    setMessages((prev) => [...prev, { 
+      role: "assistant", 
+      content: response.content, 
+      sources: response.sources 
+    }]);
     setIsLoading(false);
   };
 

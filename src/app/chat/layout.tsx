@@ -1,13 +1,16 @@
 "use client";
 
+import dynamic from 'next/dynamic';
 import ChatSidebar from "@/features/chat/components/ChatSidebar";
-import PDFDrawer from "@/features/chat/components/PdfDrawer";
 import { useState } from "react";
 import { PanelLeftOpen, PanelLeftClose } from "lucide-react";
 
+const PDFDrawer = dynamic(() => import('@/features/chat/components/PdfDrawer'), {
+    ssr: false,
+  });
+
 export default function ChatLayout({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [pdfOpen, setPdfOpen] = useState(false);
 
     return (
         <div className="flex h-screen bg-[#1e1e20] text-white overflow-hidden relative">
@@ -19,16 +22,6 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
                         className="bg-[#2a2a2d] text-white px-3 py-2 rounded hover:bg-[#3a3a3d] shadow transition cursor-pointer pointer-events-auto"
                     >
                         {sidebarOpen ? <PanelLeftClose className="w-5 h-5" /> : <PanelLeftOpen className="w-5 h-5" />}
-                    </button>
-                </div>
-
-                <div className="flex gap-2">
-                    {/* Placeholder for Profile or future controls */}
-                    <button
-                        onClick={() => setPdfOpen(!pdfOpen)}
-                        className="bg-[#2a2a2d] text-white px-3 py-2 rounded hover:bg-[#3a3a3d] shadow transition pointer-events-auto cursor-pointer"
-                    >
-                        {pdfOpen ? "Close PDF" : "📄 PDF"}
                     </button>
                 </div>
             </div>
@@ -45,8 +38,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
                 </div>
             </main>
 
-            {/* PDF Drawer */}
-            <PDFDrawer isOpen={pdfOpen} />
+            <PDFDrawer />
         </div>
     )
 }
