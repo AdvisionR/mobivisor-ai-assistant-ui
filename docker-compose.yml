@@ -1,0 +1,12 @@
+services:
+  frontend:
+    container_name: mobivisor-ai-assistant-ui
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+    restart: unless-stopped

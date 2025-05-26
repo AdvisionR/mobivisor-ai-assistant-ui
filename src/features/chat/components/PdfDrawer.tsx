@@ -1,6 +1,6 @@
 import { Document, Page, pdfjs } from 'react-pdf';
 import { usePdfStore } from '../stores/pdfStore';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 
