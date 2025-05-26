@@ -1,7 +1,7 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 type FetchOptions = Omit<RequestInit, 'body'> & {
-  json?: any;
+  json?: unknown;
 };
 
 export async function apiFetch<T>(
