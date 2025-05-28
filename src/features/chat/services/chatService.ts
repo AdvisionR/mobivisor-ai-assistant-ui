@@ -1,4 +1,4 @@
-import { ChatMessage } from "@/features/chat/types";
+import { ChatMessage, Source } from "@/features/chat/types";
 import { apiFetch } from "@/lib/fetcher";
 
 export async function sendChatMessage(messages: ChatMessage[]): Promise<Omit<ChatMessage, 'role'>> {
@@ -10,7 +10,7 @@ export async function sendChatMessage(messages: ChatMessage[]): Promise<Omit<Cha
     collection: "mobivisor",
   };
 
-  const data = await apiFetch<{ response: string; sources: string[] }>(
+  const data = await apiFetch<{ response: string; sources: Source[] }>(
     '/api/v1/document/query',
     {
       method: 'POST',
