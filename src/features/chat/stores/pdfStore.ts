@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { Source } from '../types';
 
 type PdfState = {
   isOpen: boolean;
@@ -7,12 +8,13 @@ type PdfState = {
   part: number;  
   title: string | null;
   url: string | null;
-  openPdf: (source: string) => void;
+  text: string | null;
+  openPdf: (source: Source) => void;
   closePdf: () => void;
 };
 
-const parseSource = (source: string) => {
-  const [file_path, pageStr, partStr] = source.split(':');
+const parseSource = (source: Source) => {
+  const [file_path, pageStr, partStr] = source.id.split(':');
   const file = file_path.split("/")[1];
   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/static/${file}`;
 
@@ -31,6 +33,7 @@ export const usePdfStore = create<PdfState>((set) => ({
   part: 1,
   title: null,
   url: null,
+  text: null,
   openPdf: (source) => {
     const { file, url, page, part } = parseSource(source);
     set({
@@ -39,6 +42,7 @@ export const usePdfStore = create<PdfState>((set) => ({
       page,
       part,
       url,
+      text: source.text,
       title: file.split('/').pop() || 'PDF Document',
     });
   },
