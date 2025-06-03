@@ -1,6 +1,7 @@
 export type Source = {
   id: string;
   text: string;
+  score: number;
 };
 
 export type ChatMessage = {

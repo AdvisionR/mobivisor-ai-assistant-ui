@@ -45,6 +45,9 @@ export default function Message({ role, content, sources }: ChatMessage) {
                                 >
                                     <ScrollTextIcon className="w-5 h-5" />
                                     <span className="truncate">{getSourceText(source.id)}</span>
+                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-600 text-blue-100">
+                                        {source.score}%
+                                    </span>
                                 </button>
                             ))}
                         </div>
