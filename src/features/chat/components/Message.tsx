@@ -2,10 +2,68 @@ import { ChatMessage } from "@/features/chat/types";
 import { usePdfStore } from "@/features/chat/stores/pdfStore"; 
 import { ScrollTextIcon } from "lucide-react";
 import Image from "next/image";
+import React from "react";
 
 export default function Message({ role, content, sources }: ChatMessage) {
     const isUser = role === "user";
     const openPdf = usePdfStore((state) => state.openPdf);
+
+    const parseContentWithLinks = (text: string) => {
+        const markdownLinkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+        const elements: React.ReactNode[] = [];
+        let lastIndex = 0;
+        let keyCounter = 0;
+
+        text.replace(markdownLinkRegex, (match, linkText, url, offset) => {
+            if (lastIndex < offset) {
+                const plainText = text.slice(lastIndex, offset);
+                elements.push(...splitPlainUrls(plainText, () => `plain-${keyCounter++}`));
+            }
+
+            elements.push(
+                <a
+                    key={`markdown-${keyCounter++}`}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 underline break-words"
+                >
+                    {linkText}
+                </a>
+            );
+
+            lastIndex = offset + match.length;
+            return match;
+        });
+
+        if (lastIndex < text.length) {
+            const remainingText = text.slice(lastIndex);
+            elements.push(...splitPlainUrls(remainingText, () => `plain-${keyCounter++}`));
+        }
+
+        return elements;
+    };
+
+    function splitPlainUrls(text: string, getKey: () => string): React.ReactNode[] {
+        const plainUrlRegex = /(https?:\/\/[^\s]+)/g;
+        const parts = text.split(plainUrlRegex);
+
+        return parts.map((part) =>
+            plainUrlRegex.test(part) ? (
+                <a
+                    key={getKey()}
+                    href={part}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 underline break-words"
+                >
+                    {part}
+                </a>
+            ) : (
+                <React.Fragment key={getKey()}>{part}</React.Fragment>
+            )
+        );
+    }
 
     const getSourceText = (id: string) => {
         const pageStr = id.split(':')[1];
@@ -31,7 +89,7 @@ export default function Message({ role, content, sources }: ChatMessage) {
                     }
                 `}
             >
-                <p>{content}</p>
+                <p>{parseContentWithLinks(content)}</p>
 
                 {sources && sources.length > 0 && (
                     <div className="mt-2 border-t border-gray-700 pt-2 text-xs text-blue-400">
