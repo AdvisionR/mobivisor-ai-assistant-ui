@@ -38,8 +38,9 @@ export default function LoginForm() {
             setUser(mapMeResponseToUser(me.data));
 
             router.push("/chat");
-        } catch(err: any) {
-            toast.error(err.message || "Login failed");
+        } catch(err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : "Login failed";
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -80,7 +81,7 @@ export default function LoginForm() {
             </form>
 
             <div className="mt-4 text-center text-gray-400">
-                <span>Don't have an account?  </span>
+                <span>Don&apos;t have an account?  </span>
                 <button
                     className="text-[#F7941D] font-semibold hover:underline cursor-pointer"
                     onClick={() => router.push("/auth/register")}

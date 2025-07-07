@@ -26,8 +26,9 @@ export default function RegisterForm() {
             const res = await registerUser(data);
             toast.success(res.message);
             router.push("/auth/login");
-        } catch (err: any) {
-            toast.error(err.message || "Register failed");
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : "Registration failed";
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }

@@ -2,7 +2,6 @@ import Message from "@/features/chat/components/Message";
 import { ChatMessage } from "@/features/chat/types";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 interface MessageListProps {
     messages: ChatMessage[];
