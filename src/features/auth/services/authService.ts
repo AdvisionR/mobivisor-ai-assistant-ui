@@ -10,7 +10,7 @@ import { MeResponse, RegisterResponse } from "@/features/auth/types";
 export async function login(data: LoginFormData) {
     const res = await apiFetch<{ message: string; data: { accessToken: string; refreshToken: string } }>(
         SERVICE.AUTH,
-        '/dev/v1/auth/login', 
+        '/api/v1/auth/login', 
         {
             method: 'POST',
             json: data,
@@ -23,7 +23,7 @@ export async function login(data: LoginFormData) {
 export async function register(data: RegisterFormData) {
     return await apiFetch<ApiResponse<RegisterResponse>>(
         SERVICE.AUTH,
-        '/dev/v1/auth/register', {
+        '/api/v1/auth/register', {
             method: "POST",
             json: data,
         }
@@ -34,7 +34,7 @@ export async function register(data: RegisterFormData) {
 export async function fetchMe() {
   return await apiFetch<ApiResponse<MeResponse>>(
     SERVICE.AUTH,
-    '/dev/v1/auth/me',
+    '/api/v1/auth/me',
     { method: 'GET' }
   );
 }
