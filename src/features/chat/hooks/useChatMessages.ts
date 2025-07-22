@@ -35,8 +35,9 @@ export function useChatMessages(chatUuid: string | null) {
         );
 
         setMessages(response.data);
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch chat messages.");
+      } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to fetch chat messages";
+        setError(errorMessage);
       } finally {
         setIsLoading(false);
       }
