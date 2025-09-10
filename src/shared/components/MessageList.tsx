@@ -40,7 +40,6 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
                             <Message key={index} role={message.role} content={message.content} sources={message.sources} />
                         ))}
                         {isLoading && (
-
                             <div className="flex justify-start mb-3">
                                 <div className="mr-2 flex-shrink-0">
                                     <Image
