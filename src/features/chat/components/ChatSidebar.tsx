@@ -62,7 +62,7 @@ export default function ChatSidebar() {
                 ) : error ? (
                     <p className="text-sm text-red-400">{error}</p>
                 ) : filteredChats.length > 0 ? (
-                    filteredChats.map(({ chat, idx }) => (
+                    filteredChats.map(({ chat }) => (
                         <button
                             key={chat.uuid}
                             onClick={() => setChatUuid(chat.uuid)}
