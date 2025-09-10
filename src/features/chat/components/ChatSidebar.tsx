@@ -6,11 +6,17 @@ import { useChatSidebar } from "@/features/chat/hooks/useChatSidebar";
 import { useSelectedChat } from '@/features/chat/stores/useSelectedChat';
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { createChat } from "@/features/chat/services/createChat";
+import { motion } from 'framer-motion';
 
-export default function ChatSidebar() {
+type ChatSidebarProps = {
+    isVisible: boolean;
+};
+
+export default function ChatSidebar({ isVisible }: ChatSidebarProps) {
     const [search, setSearch] = useState<string>('');
     const { chats, isLoading, error, fetchChats } = useChatSidebar();
     const user = useAuthStore((state) => state.user);
+    const { chatUuid: selectedChatUuid, setChatUuid } = useSelectedChat();
 
     const filteredChats = chats
         .map((chat, idx) => ({ chat, idx }))
@@ -18,22 +24,21 @@ export default function ChatSidebar() {
 
     const handleNewChat = async () => {
         if (!user?.uuid) return;
-
         const title = `New Conversation ${chats.length + 1}`;
         const newChat = await createChat(user.uuid, title);
-
         setChatUuid(newChat.uuid);
-
         await fetchChats();
     };
 
-    const { chatUuid: selectedChatUuid, setChatUuid } = useSelectedChat();
-
     return (
-        <aside className="h-full flex flex-col bg-[#1a1a1c] text-white border-r border-gray-800 p-4 w-64">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold"></h2>
+        <motion.aside
+            initial={{ x: "-100%" }}
+            animate={{ x: isVisible ? 0 : "-100%" }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "tween", duration: 0.3 }}
+            className="fixed top-0 left-0 h-full w-64 z-40 bg-[#1a1a1c] text-white border-r border-gray-800 p-4 shadow-lg"
+        >
+            <div className="flex justify-end mb-4">
                 <button
                     onClick={handleNewChat}
                     className="p-2 hover:bg-[#2a2a2d] rounded transition cursor-pointer"
@@ -43,7 +48,6 @@ export default function ChatSidebar() {
                 </button>
             </div>
 
-            {/* Search */}
             <div className="relative mb-4">
                 <input
                     type="text"
@@ -55,7 +59,6 @@ export default function ChatSidebar() {
                 <SearchIcon className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
             </div>
 
-            {/* Chat List */}
             <div className="flex-1 overflow-y-auto space-y-1 custom-scrollbar">
                 {isLoading ? (
                     <p className="text-sm text-gray-400">Loading...</p>
@@ -66,11 +69,10 @@ export default function ChatSidebar() {
                         <button
                             key={chat.uuid}
                             onClick={() => setChatUuid(chat.uuid)}
-                            className={`w-full text-left px-3 py-2 rounded transition cursor-pointer ${
-                                chat.uuid === selectedChatUuid
-                                    ? "bg-[#2f2f32] text-white font-semibold"
-                                    : "hover:bg-[#2a2a2d]"
-                            }`}
+                            className={`w-full text-left px-3 py-2 rounded transition cursor-pointer ${chat.uuid === selectedChatUuid
+                                ? "bg-[#2f2f32] text-white font-semibold"
+                                : "hover:bg-[#2a2a2d]"
+                                }`}
                         >
                             {chat.title}
                         </button>
@@ -79,6 +81,6 @@ export default function ChatSidebar() {
                     <p className="text-sm text-gray-400">No chats found.</p>
                 )}
             </div>
-        </aside>
+        </motion.aside>
     );
 }

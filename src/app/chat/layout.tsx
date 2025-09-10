@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import ChatSidebar from "@/features/chat/components/ChatSidebar";
+import { AnimatePresence } from 'framer-motion';
 import { useState } from "react";
 import { PanelLeftOpen, PanelLeftClose } from "lucide-react";
 import Image from 'next/image';
@@ -26,7 +27,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
         <AuthGuard>
             <div className="flex h-screen bg-[#1e1e20] text-white overflow-hidden relative">
                 {/* Top Control Bar */}
-                <div className="absolute top-4 left-4 right-4 z-30 flex justify-between items-center pointer-events-none">
+                <div className="absolute top-4 left-4 right-4 z-50 flex justify-between items-center pointer-events-none">
                     <div className="flex items-center gap-3 pointer-events-auto">
                         {/* Sidebar Toggle Button */}
                         <button
@@ -57,7 +58,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
                                 </Avatar>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="bg-[#2a2a2d] text-white border-none">
-                                <DropdownMenuItem 
+                                <DropdownMenuItem
                                     className="flex items-center gap-2 text-gray-400 pointer-events-none cursor-default hover:bg-transparent"
                                 >
                                     <CircleUser className="w-4 h-4" /> {user?.email}
@@ -65,7 +66,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
                                 <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
                                     <Settings className="w-4 h-4" /> Settings
                                 </DropdownMenuItem>
-                                <DropdownMenuItem 
+                                <DropdownMenuItem
                                     onClick={() => {
                                         logout();
                                         router.push("/auth/login");
@@ -80,12 +81,18 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
                 </div>
 
                 {/* Sidebar */}
-                {sidebarOpen && (
-                    <ChatSidebar />
-                )}
+
+                <AnimatePresence>
+                    {sidebarOpen && <ChatSidebar isVisible={true} key="chatSidebar" />}
+                </AnimatePresence>
+
 
                 {/* Main Content */}
-                <main className="flex-1 flex justify-center overflow-y-auto pt-5 pb-6 px-4">
+                <main
+                    className={`flex-1 flex justify-center overflow-y-auto pt-5 pb-6 px-4 transition-all duration-300 ${sidebarOpen ? 'ml-64' : ''
+                        }`}
+                >
+
                     <div className="w-full max-w-3xl flex flex-col h-full">
                         {children}
                     </div>
