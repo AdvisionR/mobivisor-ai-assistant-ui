@@ -36,7 +36,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         className="object-contain"
                         priority
                     />
-                    <span>Chat'e Dön</span>
+                    <span>Return to Chat</span>
                 </button>
             </div>
 
