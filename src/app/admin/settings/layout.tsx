@@ -16,6 +16,7 @@ import {
     Image,
     Workflow,
     Database,
+    Layers,
 } from "lucide-react";
 
 const settingsTabs = [
@@ -25,6 +26,7 @@ const settingsTabs = [
     { name: "Evaluations", href: "/admin/settings/evaluations", icon: BarChart3 },
     { name: "External Tools", href: "/admin/settings/external-tools", icon: Wrench },
     { name: "Documents", href: "/admin/settings/documents", icon: FileText },
+    { name: "Collections", href: "/admin/settings/collections", icon: Layers },
     { name: "Web Search", href: "/admin/settings/web-search", icon: Search },
     { name: "Code Execution", href: "/admin/settings/code-execution", icon: Code },
     { name: "Interface", href: "/admin/settings/interface", icon: Monitor },
