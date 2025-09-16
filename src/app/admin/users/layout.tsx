@@ -3,11 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
-import { User, Users } from "lucide-react";
+import { User } from "lucide-react";
 
 const USER_TABS = [
     { name: "Overview", href: "/admin/users/overview", icon: User },
-    { name: "Groups", href: "/admin/users/groups", icon: Users },
 ];
 
 export default function UsersLayout({ children }: { children: ReactNode }) {
