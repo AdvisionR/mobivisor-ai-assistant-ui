@@ -21,7 +21,7 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
         <div className="flex-1 overflow-y-auto px-4 space-y-4 custom-scrollbar">
             {isEmpty ? (
                 <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
-                    <Image 
+                    <Image
                         src="/favicon.png"
                         alt="Mobivisor Logo"
                         width={100}
@@ -39,7 +39,26 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
                         {messages.map((message, index) => (
                             <Message key={index} role={message.role} content={message.content} sources={message.sources} />
                         ))}
-                        {isLoading && <p className="text-gray-400 text-sm italic">Thinking...</p>}
+                        {isLoading && (
+                            <div className="flex justify-start mb-3">
+                                <div className="mr-2 flex-shrink-0">
+                                    <Image
+                                        src="/favicon.png"
+                                        alt="System"
+                                        width={32}
+                                        height={32}
+                                        className="rounded-full"
+                                    />
+                                </div>
+
+                                <div className="flex flex-col gap-2 bg-[#2a2a2d] px-4 py-3 rounded-lg max-w-xl animate-pulse w-full">
+                                    <div className="h-3 rounded bg-gray-700 w-[90%]" />
+                                    <div className="h-3 rounded bg-gray-700 w-[80%]" />
+                                    <div className="h-3 rounded bg-gray-700 w-[65%]" />
+                                </div>
+                            </div>
+                        )}
+
                         <div ref={bottomRef} />
                     </div>
                 </>
