@@ -6,13 +6,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginFormData } from "@/features/auth/schemas/loginSchema";
 import { fetchMe, login } from "@/features/auth/services/authService";
-import FormError from "@/shared/ui/form-error";
-import Label from "@/shared/ui/label";
-import Input from "@/shared/ui/input";
 import Button from "@/shared/ui/button";
 import { useAuthStore } from "../store/useAuthStore";
 import { toast } from "sonner";
 import { mapMeResponseToUser } from "@/features/auth/lib/mapMeResponseToUser";
+import SpinnerButtonContent from "@/components/ui/SpinnerButtonContent";
+import FormField from "@/components/ui/FormField";
 
 export default function LoginForm() {
     const {
@@ -48,47 +47,55 @@ export default function LoginForm() {
 
     return (
         <>
-            <form 
+                      <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="bg-[#2a2a2d] p-6 rounded-xl shadow-md w-full max-w-md space-y-4"
             >
                 <h1 className="text-2xl font-semibold text-center">Login Page</h1>
 
-                <div>
-                    <Label htmlFor="userName">Username</Label>
-                    <Input
-                        id="userName"
-                        placeholder="username"
-                        {...register("userName")}
-                    />
-                    <FormError message={errors.userName?.message} />
-                </div>
+                <FormField
+                    id="userName"
+                    label="Username"
+                    placeholder="username"
+                    register={register}
+                    error={errors.userName?.message}
+                    disabled={loading}
+                />
 
-                <div>
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                        id="password"
-                        type="password"
-                        placeholder="••••••••"
-                        {...register("password")}
-                    />
-                    <FormError message={errors.password?.message} />
-                </div>
+                <FormField
+                    id="password"
+                    label="Password"
+                    type="password"
+                    placeholder="••••••••"
+                    register={register}
+                    error={errors.password?.message}
+                    disabled={loading}
+                />
 
-                <Button type="submit" disabled={loading}>
-                    {loading ? "Login..." : "Login"}
+                <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {loading ? <SpinnerButtonContent text="Logging in..." /> : "Login"}
                 </Button>
             </form>
 
             <div className="mt-4 text-center text-gray-400">
-                <span>Don&apos;t have an account?  </span>
+                <span>Don&apos;t have an account? </span>
                 <button
-                    className="text-[#F7941D] font-semibold hover:underline cursor-pointer"
+                    disabled={loading}
+                    className={`font-semibold transition ${
+                        loading
+                            ? "text-gray-400 cursor-not-allowed no-underline"
+                            : "text-[#F7941D] cursor-pointer hover:underline"
+                    }`}
                     onClick={() => router.push("/auth/register")}
                 >
                     Create an account
                 </button>
             </div>
         </>
+
     )
 }

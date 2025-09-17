@@ -1,3 +1,4 @@
+// RegisterForm.tsx
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -7,103 +8,105 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema, RegisterFormData } from "@/features/auth/schemas/registerSchema";
 import { register as registerUser } from "@/features/auth/services/authService";
 import { toast } from "sonner";
+import Button from "@/shared/ui/button";
+import FormField from "@/components/ui/FormField";
+import SpinnerButtonContent from "@/components/ui/SpinnerButtonContent";
 
 export default function RegisterForm() {
-    const router = useRouter();
-    const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<RegisterFormData>({
-        resolver: zodResolver(registerSchema),
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+  });
 
-    const onSubmit = async (data: RegisterFormData) => {
-        setLoading(true);
-        try {
-            const res = await registerUser(data);
-            toast.success(res.message);
-            router.push("/auth/login");
-        } catch (err: unknown) {
-            const errorMessage = err instanceof Error ? err.message : "Registration failed";
-            toast.error(errorMessage);
-        } finally {
-            setLoading(false);
-        }
-    };
+  const onSubmit = async (data: RegisterFormData) => {
+    setLoading(true);
+    try {
+      const res = await registerUser(data);
+      toast.success(res.message);
+      router.push("/auth/login");
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Registration failed";
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
-        <>
-            <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="bg-[#2a2a2d] p-6 rounded-xl shadow-md w-full max-w-md space-y-4"
-            >
-                <h1 className="text-xl font-semibold text-center">Register Page</h1>
+  return (
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-[#2a2a2d] p-6 rounded-xl shadow-md w-full max-w-md space-y-4"
+      >
+        <h1 className="text-xl font-semibold text-center">Register Page</h1>
 
-                <div>
-                    <label className="block text-sm font-medium">Username</label>
-                    <input
-                        {...register("userName")}
-                        className="w-full bg-[#1e1e20] border border-gray-600 px-3 py-2 rounded mt-1 placeholder-gray-400"
-                        placeholder="username"
-                    />
-                    {errors.userName && <p className="text-red-500 text-xs mt-1">{errors.userName.message}</p>}
-                </div>
+        <FormField
+          id="userName"
+          label="Username"
+          placeholder="username"
+          register={register}
+          error={errors.userName?.message}
+          disabled={loading}
+        />
 
-                <div>
-                    <label className="block text-sm font-medium">E-mail</label>
-                    <input
-                        {...register("email")}
-                        className="w-full bg-[#1e1e20] border border-gray-600 px-3 py-2 rounded mt-1 placeholder-gray-400"
-                        placeholder="example@mail.com"
-                    />
-                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
-                </div>
+        <FormField
+          id="email"
+          label="E-mail"
+          placeholder="example@mail.com"
+          register={register}
+          error={errors.email?.message}
+          disabled={loading}
+        />
 
-                <div>
-                    <label className="block text-sm font-medium">Password</label>
-                    <input
-                        type="password"
-                        {...register("password")}
-                        className="w-full bg-[#1e1e20] border border-gray-600 px-3 py-2 rounded mt-1 placeholder-gray-400"
-                        placeholder="••••••••"
-                    />
-                    {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
-                </div>
+        <FormField
+          id="password"
+          label="Password"
+          type="password"
+          placeholder="••••••••"
+          register={register}
+          error={errors.password?.message}
+          disabled={loading}
+        />
 
-                <div>
-                    <label className="block text-sm font-medium">Confirm Password</label>
-                    <input
-                        type="password"
-                        {...register("rePassword")}
-                        className="w-full bg-[#1e1e20] border border-gray-600 px-3 py-2 rounded mt-1 placeholder-gray-400"
-                        placeholder="••••••••"
-                    />
-                    {errors.rePassword && (
-                        <p className="text-red-500 text-xs mt-1">{errors.rePassword.message}</p>
-                    )}
-                </div>
+        <FormField
+          id="rePassword"
+          label="Confirm Password"
+          type="password"
+          placeholder="••••••••"
+          register={register}
+          error={errors.rePassword?.message}
+          disabled={loading}
+        />
 
-                <button
-                    type="submit"
-                    className="w-full bg-[#F7941D] hover:bg-[#e07c00] text-white py-2 rounded disabled:opacity-50 cursor-pointer"
-                    disabled={loading}
-                >
-                    {loading ? "Registering..." : "Register"}
-                </button>
-            </form>
+        <Button
+          type="submit"
+          disabled={loading}
+          className="disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? <SpinnerButtonContent text="Registering..." /> : "Register"}
+        </Button>
+      </form>
 
-            <div className="mt-4 text-center text-gray-400">
-                <span>Have an account?  </span>
-                <button
-                    className="text-[#F7941D] font-semibold hover:underline cursor-pointer"
-                    onClick={() => router.push("/auth/login")}
-                >
-                    Log in
-                </button>
-            </div>
-        </>
-    );
+      <div className="mt-4 text-center text-gray-400">
+        <span>Have an account? </span>
+        <button
+          className={`font-semibold transition ${
+            loading
+              ? "text-gray-400 cursor-not-allowed no-underline"
+              : "text-[#F7941D] cursor-pointer hover:underline"
+          }`}
+          disabled={loading}
+          onClick={() => router.push("/auth/login")}
+        >
+          Log in
+        </button>
+      </div>
+    </>
+  );
 }
